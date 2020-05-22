@@ -3,6 +3,7 @@
 namespace KABBOUCHI\Ward;
 
 use Closure;
+use Illuminate\Support\Facades\Storage;
 
 class Ward
 {
@@ -100,7 +101,7 @@ class Ward
      */
     public static function pathToLogFile($file)
     {
-        $logsPath = storage_path('logs');
+        $logsPath = Storage::disk('tenantLog')->path('logs');
         if (app('files')->exists($file)) { // try the absolute path
             return $file;
         }
@@ -179,7 +180,7 @@ class Ward
      */
     public static function getFiles($basename = false)
     {
-        $files = glob(storage_path().'/logs/*.log');
+        $files = glob(Storage::disk('tenantLog')->path('logs').'/*.log');
         $files = array_reverse($files);
         $files = array_filter($files, 'is_file');
         if ($basename && is_array($files)) {
